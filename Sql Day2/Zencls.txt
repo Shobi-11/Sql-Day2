@@ -1,0 +1,300 @@
+-- 1. courses
+CREATE TABLE courses (
+    _id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    instructorId INT,
+    FOREIGN KEY (instructorId) REFERENCES instructors(_id)
+);
+
+-- 2. instructors
+CREATE TABLE instructors (
+    _id INT PRIMARY KEY AUTO_INCREMENT,
+    firstName VARCHAR(255) NOT NULL,
+    lastName VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+     
+);
+
+-- 3. students
+CREATE TABLE students (
+    _id INT PRIMARY KEY AUTO_INCREMENT,
+    firstName VARCHAR(255) NOT NULL,
+    lastName VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+);
+
+-- 4. enrollments
+CREATE TABLE enrollments (
+    _id INT PRIMARY KEY AUTO_INCREMENT,
+    studentId INT,
+    courseId INT,
+    enrollmentDate DATE NOT NULL,
+    FOREIGN KEY (studentId) REFERENCES students(_id),
+    FOREIGN KEY (courseId) REFERENCES courses(_id)
+);
+
+-- 5. users
+CREATE TABLE users (
+    _id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(255) NOT NULL
+);
+
+-- 6. reviews
+CREATE TABLE reviews (
+    _id INT PRIMARY KEY AUTO_INCREMENT,
+    courseId INT,
+    studentId INT,
+    rating INT NOT NULL,
+    comment TEXT,
+    FOREIGN KEY (courseId) REFERENCES courses(_id),
+    FOREIGN KEY (studentId) REFERENCES students(_id)
+);
+
+-- 7. materials
+CREATE TABLE materials (
+    _id INT PRIMARY KEY AUTO_INCREMENT,
+    courseId INT,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    fileUrl VARCHAR(255),
+    FOREIGN KEY (courseId) REFERENCES courses(_id)
+);
+
+-- 8. announcements
+CREATE TABLE announcements (
+    _id INT PRIMARY KEY AUTO_INCREMENT,
+    courseId INT,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    date DATE NOT NULL,
+    FOREIGN KEY (courseId) REFERENCES courses(_id)
+);
+
+-- 9. activities
+CREATE TABLE activities (
+    _id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    date DATE NOT NULL,
+    courseId INT,
+    FOREIGN KEY (courseId) REFERENCES courses(_id)
+);
+
+-- 10. sessions_roadmap
+CREATE TABLE sessions_roadmap (
+    _id INT PRIMARY KEY AUTO_INCREMENT,
+    sessionNumber INT NOT NULL,
+    date DATE NOT NULL,
+    courseId INT,
+    FOREIGN KEY (courseId) REFERENCES courses(_id)
+);
+
+-- 11. topics_heading
+CREATE TABLE topics_heading (
+    _id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    courseId INT,
+    FOREIGN KEY (courseId) REFERENCES courses(_id)
+);
+
+-- 12. contents
+CREATE TABLE contents (
+    _id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    courseId INT,
+    topicId INT,
+    FOREIGN KEY (courseId) REFERENCES courses(_id),
+    FOREIGN KEY (topicId) REFERENCES topics_heading(_id)
+);
+
+-- 13. navbar_menu
+CREATE TABLE navbar_menu (
+    _id INT PRIMARY KEY AUTO_INCREMENT,
+    label VARCHAR(255) NOT NULL,
+    link VARCHAR(255) NOT NULL,
+    orderNum INT NOT NULL,
+    courseId INT,
+    FOREIGN KEY (courseId) REFERENCES courses(_id)
+);
+
+-- 14. recording_links
+CREATE TABLE recording_links (
+    _id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    link VARCHAR(255) NOT NULL,
+    date DATE NOT NULL,
+    courseId INT,
+    sessionId INT,
+    FOREIGN KEY (courseId) REFERENCES courses(_id),
+    FOREIGN KEY (sessionId) REFERENCES sessions_roadmap(_id)
+);
+
+-- 15. feedback
+CREATE TABLE feedback (
+    _id INT PRIMARY KEY AUTO_INCREMENT,
+    courseId INT,
+    studentId INT,
+    rating INT NOT NULL,
+    comment TEXT,
+    date DATE NOT NULL,
+    FOREIGN KEY (courseId) REFERENCES courses(_id),
+    FOREIGN KEY (studentId) REFERENCES students(_id)
+);
+
+-- 16. additional_sessions
+CREATE TABLE additional_sessions (
+    _id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    date DATE NOT NULL,
+    courseId INT,
+    FOREIGN KEY (courseId) REFERENCES courses(_id)
+);
+
+-------------------------------------------------------------------------------------------------------------------
+1. INSERT INTO courses (_id, title, description, instructorId)
+VALUES
+    (1, 'Introduction to Programming', 'Learn the basics of programming', 101),
+    (2, 'Data Structures', 'Explore fundamental data structures', 102),
+    (3, 'Web Development', 'Building dynamic websites', 103),
+    (4, 'Machine Learning Basics', 'Introduction to ML concepts', 104),
+    (5, 'Database Management', 'Understanding databases', 105);
+
+2. INSERT INTO instructors (_id, firstName, lastName, email)
+VALUES
+    (101, 'John', 'Doe', 'john.doe@example.com'),
+    (102, 'Jane', 'Smith', 'jane.smith@example.com'),
+    (103, 'Chris', 'Johnson', 'chris.johnson@example.com'),
+    (104, 'Emily', 'Williams', 'emily.williams@example.com'),
+    (105, 'Michael', 'Brown', 'michael.brown@example.com');
+
+
+3. INSERT INTO students (_id, firstName, lastName, email)
+VALUES
+    (201, 'Alice', 'Smith', 'alice.smith@example.com'),
+    (202, 'Bob', 'Jones', 'bob.jones@example.com'),
+    (203, 'Charlie', 'Davis', 'charlie.davis@example.com'),
+    (204, 'Diana', 'Miller', 'diana.miller@example.com'),
+    (205, 'Eva', 'Clark', 'eva.clark@example.com');
+
+
+4. INSERT INTO enrollments (_id, studentId, courseId, enrollmentDate)
+VALUES
+    (1, 201, 1, '2023-01-01'),
+    (2, 202, 3, '2023-01-05'),
+    (3, 203, 2, '2023-01-10'),
+    (4, 204, 4, '2023-01-15'),
+    (5, 205, 1, '2023-01-20');
+
+5. INSERT INTO users (_id, username, password, role)
+VALUES
+    (1, 'john_doe', 'hashed_password', 'instructor'),
+    (2, 'jane_smith', 'hashed_password', 'student'),
+    (3, 'chris_johnson', 'hashed_password', 'admin'),
+    (4, 'emily_williams', 'hashed_password', 'student'),
+    (5, 'michael_brown', 'hashed_password', 'instructor');
+
+
+6. INSERT INTO reviews (_id, courseId, studentId, rating, comment)
+VALUES
+    (1, 1, 201, 4, 'Great course!'),
+    (2, 3, 202, 5, 'Excellent content!'),
+    (3, 2, 203, 3, 'Needs improvement.'),
+    (4, 4, 204, 4, 'Enjoyed learning.'),
+    (5, 1, 205, 5, 'Highly recommended!');
+
+
+7. INSERT INTO materials (_id, courseId, title, description, fileUrl)
+VALUES
+    (1, 1, 'Lecture Slides', 'Introduction slides for the course', 'http://example.com/slides.pdf'),
+    (2, 3, 'Project Guidelines', 'Instructions for the final project', 'http://example.com/project.pdf'),
+    (3, 2, 'Data Structures Book', 'Reference material for data structures', 'http://example.com/data_structures.pdf'),
+    (4, 4, 'ML Basics Video', 'Video tutorial on machine learning basics', 'http://example.com/ml_basics.mp4'),
+    (5, 5, 'Database Cheat Sheet', 'Quick guide to database management', 'http://example.com/database_cheat_sheet.pdf');
+
+
+8. INSERT INTO announcements (_id, courseId, title, content, date)
+VALUES
+    (1, 1, 'Welcome Message', 'Welcome to the course!', '2023-01-15'),
+    (2, 3, 'Important Update', 'New deadline for project submission', '2023-02-01'),
+    (3, 2, 'Web Development Workshop', 'Join us for a hands-on workshop', '2023-02-20'),
+    (4, 4, 'Guest Speaker Session', 'Industry expert discussing ML trends', '2023-03-05'),
+    (5, 5, 'Database Maintenance', 'Scheduled maintenance on the database server', '2023-03-10');
+
+
+9. INSERT INTO activities (_id, title, description, date, courseId)
+VALUES
+    (1, 'Group Project', 'Collaborative project work', '2023-02-01', 1),
+    (2, 'Coding Challenge', 'Test your programming skills', '2023-02-15', 3),
+    (3, 'Web Development Hackathon', '24-hour coding competition', '2023-03-01', 2),
+    (4, 'Machine Learning Workshop', 'Hands-on session on ML algorithms', '2023-03-20', 4),
+    (5, 'Database Quiz', 'Test your knowledge on database concepts', '2023-04-01', 5);
+
+
+10. INSERT INTO sessions_roadmap (_id, sessionNumber, date, courseId)
+VALUES
+    (1, 1, '2023-02-10', 1),
+    (2, 2, '2023-02-15', 3),
+    (3, 3, '2023-02-20', 2),
+    (4, 4, '2023-03-05', 4),
+    (5, 5, '2023-03-10', 5);
+
+
+11. INSERT INTO topics_heading (_id, title, courseId)
+VALUES
+    (1, 'Introduction', 1),
+    (2, 'Advanced Data Structures', 2),
+    (3, 'Frontend Development', 3),
+    (4, 'Deep Learning', 4),
+    (5, 'Database Design', 5);
+
+
+12. INSERT INTO contents (_id, title, description, courseId, topicId)
+VALUES
+    (1, 'Variables', 'Definition and use in programming', 1, 1),
+    (2, 'Linked Lists', 'Introduction to linked list data structure', 2, 2),
+    (3, 'HTML Basics', 'Fundamentals of HTML for web development', 3, 3),
+    (4, 'Regression Algorithms', 'Understanding regression in ML', 4, 4),
+    (5, 'Normalization', 'Database normalization concepts', 5, 5);
+
+
+13. INSERT INTO navbar_menu (_id, label, link, orderNum, courseId)
+VALUES
+    (1, 'Home', '/home', 1, 1),
+    (2, 'Projects', '/projects', 2, 3),
+    (3, 'Resources', '/resources', 3, 2),
+    (4, 'ML Community', '/ml-community', 4, 4),
+    (5, 'Database Tools', '/database-tools', 5, 5);
+
+
+14. INSERT INTO recording_links (_id, title, link, date, courseId, sessionId)
+VALUES
+    (1, 'Session 1 Recording', 'http://example.com/recording1', '2023-02-10', 1, 1),
+    (2, 'Workshop Recording', 'http://example.com/workshop-recording', '2023-02-20', 3, 3),
+    (3, 'ML Session Recording', 'http://example.com/ml-session', '2023-03-05', 4, 4),
+    (4, 'Guest Speaker Session Recording', 'http://example.com/guest-speaker-recording', '2023-03-10', 5, 5),
+    (5, 'Final Session Recording', 'http://example.com/final-session-recording', '2023-03-15', 2, 2);
+
+
+15. INSERT INTO feedback (_id, courseId, studentId, rating, comment, date)
+VALUES
+    (1, 1, 201, 5, 'Excellent course!', '2023-03-01'),
+    (2, 3, 202, 4, 'Well-organized content.', '2023-03-05'),
+    (3, 2, 203, 3, 'Could be more interactive.', '2023-03-10'),
+    (4, 4, 204, 5, 'Great instructor!', '2023-03-15'),
+    (5, 1, 205, 4, 'Enjoyed the hands-on projects.', '2023-03-20');
+
+
+16. INSERT INTO additional_sessions (_id, title, description, date, courseId)
+VALUES
+    (1, 'Bonus Workshop', 'Extra content on advanced topics', '2023-03-15', 1),
+    (2, 'Guest Lecture', 'Industry expert sharing insights', '2023-04-01', 3),
+    (3, 'Q&A Session', 'Ask anything about the course', '2023-04-10', 2),
+    (4, 'Career Guidance', 'Tips for a career in programming', '2023-04-15', 4),
+    (5, 'Final Review Session', 'Prepare for the exam', '2023-04-20', 5);
+
+-------------------------------------------------------------------------------------------------------------------
